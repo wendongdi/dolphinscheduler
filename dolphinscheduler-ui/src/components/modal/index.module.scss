@@ -16,10 +16,12 @@
  */
 
 .container {
-  width: 600px;
+  width: 80%;
+  min-width: 800px;
 }
+
 .modal-card {
-  max-height: 100vh;
+  max-height: 95vh;
 }
 
 .header-icon {

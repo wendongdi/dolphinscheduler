@@ -46,6 +46,16 @@
         </encoder>
     </appender>
 
+<!--    <logger name="org.apache.dolphinscheduler.dao.mapper" level="DEBUG"/>-->
+    <logger name="org.apache.dolphinscheduler.dao.mapper.ProjectMapper.queryByCode" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.ProjectMapper.listAuthorizedProjects" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.WorkerGroupMapper.queryAllWorkerGroup" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.server.worker.task.WorkerHeartBeatTask" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.AlertMapper.selectList" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.CommandMapper.queryCommandPageBySlot" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.UserMapper.selectByIds" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.ProcessInstanceMapper.queryProcessInstanceListPaging_mpCount" level="OFF"/>
+    <logger name="org.apache.dolphinscheduler.dao.mapper.ProcessInstanceMapper.queryProcessInstanceListPaging" level="OFF"/>
     <logger name="org.apache.zookeeper" level="WARN"/>
     <logger name="org.apache.hbase" level="WARN"/>
     <logger name="org.apache.hadoop" level="WARN"/>
@@ -73,11 +83,7 @@
     </appender>
 
     <root level="INFO">
-        <if condition="${DOCKER:-false}">
-            <then>
-                <appender-ref ref="STDOUT"/>
-            </then>
-        </if>
+        <appender-ref ref="STDOUT"/>
         <appender-ref ref="STANDALONELOGFILE"/>
         <appender-ref ref="TASKLOGFILE"/>
     </root>
