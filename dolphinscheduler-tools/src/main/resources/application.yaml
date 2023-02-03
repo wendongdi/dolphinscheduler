@@ -34,16 +34,26 @@ spring:
       leak-detection-threshold: 0
       initialization-fail-timeout: 1
 
+demo:
+  tenant-code: default
+  domain-name: localhost
+  api-server-port: 45173
+
 # Override by profile
 
 ---
 spring:
   config:
     activate:
-      on-profile: mysql
+      on-profile: upgrade
+#  sql:
+#    init:
+#      schema-locations: classpath:sql/dolphinscheduler_mysql.sql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/dolphinscheduler?useUnicode=true&characterEncoding=UTF-8
+    url: jdbc:mysql://10.227.53.46:3306/dolphinscheduler?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: ds_develop
+    password: P@ssw0rd2022
 
 ---
 spring:
