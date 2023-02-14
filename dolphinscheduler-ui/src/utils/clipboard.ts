@@ -15,17 +15,18 @@
  * limitations under the License.
  */
 
-const copy = (text: string): boolean => {
-  const inp = document.createElement('input')
-  document.body.appendChild(inp)
-  inp.value = text
-  inp.select()
+export function copy(text: string) {
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  document.body.appendChild(textarea);
+  textarea.select();
   let result = false
   try {
-    result = document.execCommand('copy')
-  } catch (err) {}
-  inp.remove()
-  return result
+    result = document.execCommand('copy');
+  } catch (err) {
+  }
+  document.body.removeChild(textarea);
+  return result;
 }
 
 export default copy

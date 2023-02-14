@@ -27,6 +27,7 @@ import { useGraphBackfill } from './use-graph-backfill'
 import { useDagDragAndDrop } from './use-dag-drag-drop'
 import { useTaskEdit } from './use-task-edit'
 import { useNodeMenu } from './use-node-menu'
+import { useImportTasksModel } from './use-import-tasks-model'
 import { useNodeStatus } from './use-node-status'
 
 export {
@@ -42,5 +43,6 @@ export {
   useDagDragAndDrop,
   useTaskEdit,
   useNodeMenu,
+  useImportTasksModel,
   useNodeStatus
 }

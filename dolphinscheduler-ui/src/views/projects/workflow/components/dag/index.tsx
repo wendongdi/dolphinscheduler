@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-import type { Cell, Graph } from '@antv/x6'
+import type {Cell, Graph} from '@antv/x6'
 import {
   defineComponent,
   ref,
@@ -26,13 +26,14 @@ import {
   onBeforeUnmount,
   computed
 } from 'vue'
-import { useI18n } from 'vue-i18n'
-import { useRoute } from 'vue-router'
+import {useI18n} from 'vue-i18n'
+import {useRoute} from 'vue-router'
 import DagToolbar from './dag-toolbar'
 import DagCanvas from './dag-canvas'
 import DagSidebar from './dag-sidebar'
 import Styles from './dag.module.scss'
 import DagAutoLayoutModal from './dag-auto-layout-modal'
+import DagImportTasksModal from './dag-import-tasks-modal'
 import {
   useGraphAutoLayout,
   useGraphBackfill,
@@ -40,23 +41,25 @@ import {
   useTaskEdit,
   useBusinessMapper,
   useNodeMenu,
+  useImportTasksModel,
   useNodeStatus
 } from './dag-hooks'
-import { useThemeStore } from '@/store/theme/theme'
+import {useThemeStore} from '@/store/theme/theme'
 import VersionModal from '../../definition/components/version-modal'
-import { WorkflowDefinition, WorkflowInstance } from './types'
+import {WorkflowDefinition, WorkflowInstance} from './types'
 import DagSaveModal from './dag-save-modal'
 import ContextMenuItem from './dag-context-menu'
+import GlobalContextMenuItem from './dag-global-context-menu'
 import TaskModal from '@/views/projects/task/components/node/detail-modal'
 import StartModal from '@/views/projects/workflow/definition/components/start-modal'
 import LogModal from '@/components/log-modal'
 import './x6-style.scss'
-import { queryLog } from '@/service/modules/log'
-import { useAsyncState } from '@vueuse/core'
+import {queryLog} from '@/service/modules/log'
+import {useAsyncState} from '@vueuse/core'
 import utils from '@/utils'
-import { useUISettingStore } from '@/store/ui-setting/ui-setting'
-import { executeTask } from '@/service/modules/executors'
-import { removeTaskInstanceCache } from '@/service/modules/task-instances'
+import {useUISettingStore} from '@/store/ui-setting/ui-setting'
+import {executeTask} from '@/service/modules/executors'
+import {removeTaskInstanceCache} from '@/service/modules/task-instances'
 
 const props = {
   // If this prop is passed, it means from definition detail
@@ -83,7 +86,7 @@ export default defineComponent({
   props,
   emits: ['refresh', 'save'],
   setup(props, context) {
-    const { t } = useI18n()
+    const {t} = useI18n()
     const route = useRoute()
     const theme = useThemeStore()
 
@@ -105,7 +108,7 @@ export default defineComponent({
       formRef,
       submit,
       cancel
-    } = useGraphAutoLayout({ graph })
+    } = useGraphAutoLayout({graph})
 
     // Edit task
     const {
@@ -118,10 +121,17 @@ export default defineComponent({
       copyTask,
       processDefinition,
       removeTasks
-    } = useTaskEdit({ graph, definition: toRef(props, 'definition') })
+    } = useTaskEdit({graph, definition: toRef(props, 'definition')})
+
+    const {
+      openImportWindow,
+      handleCopyToClipboard,
+      toggle: importToggle,
+      visible: importVisible
+    } = useImportTasksModel()
 
     // Right click cell
-    const { nodeVariables, menuHide, menuStart, viewLog } = useNodeMenu({
+    const {nodeVariables, menuHide, menuStart, viewLog} = useNodeMenu({
       graph
     })
 
@@ -139,9 +149,9 @@ export default defineComponent({
 
     // execute task buttons in the dag node menu
     const executeTaskDisplay = computed(() => {
-        return (
-            route.name === 'workflow-instance-detail'
-        )
+      return (
+        route.name === 'workflow-instance-detail'
+      )
     })
 
     // other button in the dag node menu
@@ -185,16 +195,16 @@ export default defineComponent({
     )
 
     const statusTimerRef = ref()
-    const { taskList, refreshTaskStatus } = useNodeStatus({ graph })
+    const {taskList, refreshTaskStatus} = useNodeStatus({graph})
 
-    const { onDragStart, onDrop } = useDagDragAndDrop({
+    const {onDragStart, onDrop} = useDagDragAndDrop({
       graph,
       readonly: toRef(props, 'readonly'),
       appendTask
     })
 
     // backfill
-    useGraphBackfill({ graph, definition: toRef(props, 'definition') })
+    useGraphBackfill({graph, definition: toRef(props, 'definition')})
 
     // version modal
     const versionModalShow = ref(false)
@@ -219,7 +229,7 @@ export default defineComponent({
         saveModalShow.value = !versionModalShow.value
       }
     }
-    const { getConnects, getLocations } = useBusinessMapper()
+    const {getConnects, getLocations} = useBusinessMapper()
     const onSave = (saveForm: any) => {
       const edges = graph.value?.getEdges() || []
       const nodes = graph.value?.getNodes() || []
@@ -253,7 +263,7 @@ export default defineComponent({
     var getLogsID: number
 
     const getLogs = (logTimer: number) => {
-      const { state } = useAsyncState(
+      const {state} = useAsyncState(
         queryLog({
           taskInstanceId: nodeVariables.logTaskId,
           limit: nodeVariables.limit,
@@ -294,16 +304,16 @@ export default defineComponent({
 
     const handleExecuteTask = (startNodeList: number, taskDependType: string) => {
       executeTask({
-        processInstanceId: Number(route.params.id),
-        startNodeList: startNodeList,
-        taskDependType: taskDependType,
-      },
+          processInstanceId: Number(route.params.id),
+          startNodeList: startNodeList,
+          taskDependType: taskDependType,
+        },
         props.projectCode).then(() => {
-          window.$message.success(t('project.workflow.success'))
-          setTimeout(() => {
-            window.location.reload();
-          }, 1000);
-        })
+        window.$message.success(t('project.workflow.success'))
+        setTimeout(() => {
+          window.location.reload();
+        }, 1000);
+      })
     }
 
     const handleRemoveTaskInstanceCache = (taskId: number) => {
@@ -373,8 +383,8 @@ export default defineComponent({
           onRefresh={refreshTaskStatus}
         />
         <div class={Styles.content}>
-          <DagSidebar onDragStart={onDragStart} />
-          <DagCanvas onDrop={onDrop} />
+          <DagSidebar onDragStart={onDragStart}/>
+          <DagCanvas onDrop={onDrop}/>
         </div>
         <DagAutoLayoutModal
           visible={layoutVisible.value}
@@ -382,6 +392,13 @@ export default defineComponent({
           cancel={cancel}
           formValue={formValue}
           formRef={formRef}
+        />
+        <DagImportTasksModal
+          visible={importVisible.value}
+          onToggle={importToggle}
+          onCopyTask={copyTask}
+          left={nodeVariables.pageX}
+          top={nodeVariables.pageY}
         />
         {!!props.definition && (
           <VersionModal
