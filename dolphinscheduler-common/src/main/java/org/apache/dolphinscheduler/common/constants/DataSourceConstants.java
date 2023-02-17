@@ -39,7 +39,7 @@ public class DataSourceConstants {
     /**
      * validation Query
      */
-    public static final String POSTGRESQL_VALIDATION_QUERY = "select version()";
+    public static final String POSTGRESQL_VALIDATION_QUERY = "select 1";
     public static final String MYSQL_VALIDATION_QUERY = "select 1";
     public static final String HIVE_VALIDATION_QUERY = "select 1";
     public static final String CLICKHOUSE_VALIDATION_QUERY = "select 1";
