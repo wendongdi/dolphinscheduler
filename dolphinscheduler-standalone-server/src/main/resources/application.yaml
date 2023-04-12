@@ -121,7 +121,7 @@ traffic:
       #tenant2: 20
 
 master:
-  listen-port: 5678
+  listen-port: 45678
   # master fetch command num
   fetch-command-num: 10
   # master prepare execute thread number to limit handle commands in parallel
@@ -153,7 +153,7 @@ master:
 
 worker:
   # worker listener port
-  listen-port: 1234
+  listen-port: 41234
   # worker execute thread number to limit task instances in parallel
   exec-threads: 10
   # worker heartbeat interval
@@ -175,11 +175,11 @@ worker:
     - default
   # alert server listen host
   alert-listen-host: localhost
-  alert-listen-port: 50052
+  alert-listen-port: 60052
   task-execute-threads-full-policy: REJECT
 
 alert:
-  port: 50052
+  port: 60052
   # Mark each alert of alert server if late after x milliseconds as failed.
   # Define value is (0 = infinite), and alert server would be waiting alert result.
   wait-timeout: 0
@@ -268,6 +268,6 @@ spring:
        schema-locations: classpath:sql/dolphinscheduler_mysql.sql
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://127.0.0.1:3306/dolphinscheduler?useUnicode=true&characterEncoding=UTF-8
-    username: root
-    password: root
+    url: jdbc:mysql://10.227.53.46:3306/dev_dolphinscheduler?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+    username: ds_develop
+    password: P@ssw0rd2022
