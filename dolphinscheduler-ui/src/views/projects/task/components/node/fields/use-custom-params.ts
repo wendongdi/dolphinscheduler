@@ -48,7 +48,7 @@ export function useCustomParams({
           class: 'input-param-key',
           props: {
             placeholder: t('project.node.prop_tips'),
-            maxLength: 256
+            maxLength: 25600
           },
           validate: {
             trigger: ['input', 'blur'],
@@ -71,31 +71,32 @@ export function useCustomParams({
         {
           type: 'select',
           field: 'direct',
-          span: 4,
+          span: isSimple ? 0 : 4,
           options: DIRECT_LIST,
           value: 'IN',
           props: {
-            disabled: isSimple
+            hidden: isSimple
           }
         },
         {
           type: 'select',
           field: 'type',
-          span: 6,
+          span: isSimple ? 0 : 6,
           options: TYPE_LIST,
           value: 'VARCHAR',
           props: {
-            disabled: isSimple
+            hidden: isSimple
           }
         },
         {
           type: 'input',
           field: 'value',
-          span: 6,
+          span: isSimple ? 16 : 6,
           class: 'input-param-value',
           props: {
+            type: 'textarea',
             placeholder: t('project.node.value_tips'),
-            maxLength: 256
+            maxLength: 25600
           }
         }
       ]
